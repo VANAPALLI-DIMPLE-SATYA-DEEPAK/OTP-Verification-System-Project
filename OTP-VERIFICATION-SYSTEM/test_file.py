@@ -7,7 +7,7 @@ from tkinter import messagebox      # Displaying messagebox for user to enter Em
 import yaml                         # For loading yaml configuration file   
 
 # Setting retry attempts to 3
-retry_attempts = 3
+#retry_attempts = 3
 
 # Generate a random 6 digit OTP
 def generate_otp():
@@ -47,27 +47,26 @@ def send_otp_via_email(email_address, otp):
         messagebox.showerror("Error", "Failed to send OTP")
 
 
-# Ensure the submitted OTP matches the generated OTP
 def verify_otp():
     global generated_otp, retry_attempts
     try: 
         entered_otp = int(otp_entry.get())
         if entered_otp == generated_otp:
             messagebox.showinfo("Success", "OTP verified successfully!")
-            retry_attempts = 3  # Reset the attempts on successful verification
+            retry_attempts = 3  # Reset attempts on successful verification
         else:
             retry_attempts -= 1
-        if retry_attempts > 0:
+            if retry_attempts > 0:
                 messagebox.showerror("Error", f"Invalid OTP. You have {retry_attempts} attempt(s) left.")
-        else:
-            messagebox.showerror("Error", "Invalid OTP.")
-    except:
+            else:
+                messagebox.showerror("Error", "Invalid OTP. No attempts left.")
+    except ValueError:
         messagebox.showerror("Error", "Please enter a valid 6-digit OTP")
 
 
 # OTP sending process
 def send_otp_to_email():
-    global generated_otp, retry_attempts 
+    global generated_otp
     email = email_entry.get()
     
     # Regex pattern for email validation
@@ -78,7 +77,7 @@ def send_otp_to_email():
     else:
         generated_otp = generate_otp()
         send_otp_via_email(email, generated_otp)
-        retry_attempts = 3
+        
 
 
 # Graphical user interface setup using tkinter
